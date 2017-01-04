@@ -28,6 +28,8 @@ RUN curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz |
 
 # RUN cpan notest install Text::Markdown  # needed for apollo release
 
+ADD Config.groovy /apollo/grails-app/conf/Config.groovy
+
 COPY build.sh /bin/build.sh
 ADD apollo-config.groovy /apollo/apollo-config.groovy
 
@@ -40,7 +42,7 @@ USER root
 ENV CONTEXT_PATH ROOT
 ENV CATALINA_HOME /var/lib/tomcat8
 
-RUN rm -rf ${CATALINA_HOME}/webapps/* 
+RUN rm -rf ${CATALINA_HOME}/webapps/*
 
 # Download chado schema
 RUN wget --quiet https://github.com/erasche/chado-schema-builder/releases/download/1.31-jenkins97/chado-1.31.sql.gz -O /chado.sql.gz && \
