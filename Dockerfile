@@ -29,6 +29,7 @@ RUN curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz |
 # RUN cpan notest install Text::Markdown  # needed for apollo release
 
 COPY build.sh /bin/build.sh
+ADD apollo-config.groovy /apollo/apollo-config.groovy
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 RUN chown -R apollo:apollo /apollo
