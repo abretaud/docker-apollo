@@ -1,5 +1,5 @@
-# WebApollo
-# VERSION 2.0.6
+# Apollo
+# VERSION 2.0.7
 FROM tomcat:8-jre8
 MAINTAINER Anthony Bretaudeau <anthony.bretaudeau@inra.fr>, Eric Rasche <esr@tamu.edu>, Nathan Dunn <nathandunn@lbl.gov>
 ENV DEBIAN_FRONTEND noninteractive
@@ -11,34 +11,25 @@ RUN apt-get -qq update --fix-missing && \
     ant perl5 curl ssl-cert && \
     apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
     apt-get -qq update --fix-missing && \
-    apt-get --no-install-recommends -y install \
-    nodejs
+    apt-get --no-install-recommends -y install nodejs && \
+    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN npm install -g bower && \
-    cp /usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/tools.jar && \
+RUN cp /usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/tools.jar && \
     useradd -ms /bin/bash -d /apollo apollo
 
-# RUN cpan notest install Text::Markdown  # needed for apollo release
-# 2.0.6
-ENV WEBAPOLLO_VERSION ba0694195baf7094bc336ec3ca4b0227eca55c1b
+# 2.0.7
+ENV WEBAPOLLO_VERSION dedf92f7da805620d2dbfb88a8129d025fec7059
 RUN curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz | tar xzf - --strip-components=1 -C /apollo
 
 
-# RUN cpan notest install Text::Markdown  # needed for apollo release
-
-ADD PR1492_ping.diff /apollo/PR1492_ping.diff
-ADD PR1504.diff /apollo/PR1504.diff
+ADD PR1754.diff /apollo/PR1754.diff
+ADD PR1751.diff /apollo/PR1751.diff
 
 RUN cd /apollo && \
-    patch -p1 < PR1492_ping.diff && \
-    patch -p1 < PR1504.diff && \
-	./grailsw help && \
-	./gradlew help
-
-RUN mv /root/.gradle/ /apollo/.gradle/ && \
-	mv /root/.grails/ /apollo/.grails/
+    patch -p1 < PR1751.diff && \
+    patch -p1 < PR1754.diff
 
 COPY build.sh /bin/build.sh
 ADD apollo-config.groovy /apollo/apollo-config.groovy
