@@ -8,8 +8,9 @@ RUN apt-get -qq update --fix-missing && \
     apt-get --no-install-recommends -y install \
     git build-essential maven openjdk-8-jdk libpq-dev postgresql-common \
     postgresql-client xmlstarlet netcat libpng-dev zlib1g-dev libexpat1-dev \
-    ant curl ssl-cert && \
-    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    ant curl ssl-cert python-pip python-numpy python-biopython && \
+    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    pip install apollo
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
     apt-get -qq update --fix-missing && \
@@ -50,4 +51,5 @@ RUN rm -rf ${CATALINA_HOME}/webapps/* && \
     cd /apollo
 
 ADD launch.sh /launch.sh
+ADD bootstrap.sh /bootstrap.sh
 CMD "/launch.sh"
