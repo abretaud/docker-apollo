@@ -28,11 +28,13 @@ RUN curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz |
 ADD PR1754.diff /apollo/PR1754.diff
 ADD PR1751.diff /apollo/PR1751.diff
 ADD PR1774.diff /apollo/PR1774.diff
+ADD PR1775.diff /apollo/PR1775.diff
 
 RUN cd /apollo && \
     patch -p1 < PR1751.diff && \
     patch -p1 < PR1754.diff && \
-    patch -p1 < PR1774.diff
+    patch -p1 < PR1774.diff && \
+    patch -p1 < PR1775.diff
 
 COPY build.sh /bin/build.sh
 ADD apollo-config.groovy /apollo/apollo-config.groovy
