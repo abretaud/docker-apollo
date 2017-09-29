@@ -19,6 +19,11 @@ do
     sleep 10
 done
 
+if ! [[ $APOLLO_UP -eq 0 ]]; then
+        echo "Cannot connect to apollo for bootstrapping"
+    exit "${APOLLO_UP}"
+fi
+
 echo "[BOOTSTRAP] Apollo is up, bootstrapping"
 
 # Create a default group
