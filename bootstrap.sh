@@ -47,4 +47,26 @@ for u in $(echo $APOLLO_REMOTE_ADMINS | tr "," "\n"); do
     fi
 done
 
-# TODO add canned comments/status/keys
+if [ -f /bootstrap/canned_comments.txt ]; then
+    while read c; do
+        if ! arrow cannedcomments show_comment "$c" > /dev/null 2>&1; then
+            arrow cannedcomments add_comment "$c"
+        fi
+    done < /bootstrap/canned_comments.txt
+fi
+
+if [ -f /bootstrap/canned_keys.txt ]; then
+    while read c; do
+        if ! arrow cannedkeys show_key "$c" > /dev/null 2>&1; then
+            arrow cannedkeys add_key "$c"
+        fi
+    done < /bootstrap/canned_keys.txt
+fi
+
+if [ -f /bootstrap/canned_values.txt ]; then
+    while read c; do
+        if ! arrow cannedvalues show_value "$c" > /dev/null 2>&1; then
+            arrow cannedvalues add_value "$c"
+        fi
+    done < /bootstrap/canned_values.txt
+fi

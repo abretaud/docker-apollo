@@ -8,9 +8,9 @@ RUN apt-get -qq update --fix-missing && \
     apt-get --no-install-recommends -y install \
     git build-essential maven openjdk-8-jdk libpq-dev postgresql-common \
     postgresql-client xmlstarlet netcat libpng-dev zlib1g-dev libexpat1-dev \
-    ant curl ssl-cert python-pip python-numpy python-biopython python-setuptools && \
-    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
-    pip install apollo
+    ant curl ssl-cert python-pip python-numpy python-biopython python-setuptools \
+    libyaml-dev libpython-dev && \
+    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
     apt-get -qq update --fix-missing && \
@@ -24,17 +24,22 @@ RUN cp /usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar /usr/lib/jvm/java-8-openj
 ENV WEBAPOLLO_VERSION dedf92f7da805620d2dbfb88a8129d025fec7059
 RUN curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz | tar xzf - --strip-components=1 -C /apollo
 
+RUN cd /tmp && \
+    git clone https://github.com/galaxy-genome-annotation/python-apollo && \
+    cd python-apollo/ && \
+    git checkout 32cd4871bc740a79b493b60651262a71b6174668 && \
+    pip install . && \
+    cd /apollo
 
-ADD PR1754.diff /apollo/PR1754.diff
-ADD PR1751.diff /apollo/PR1751.diff
-ADD PR1774.diff /apollo/PR1774.diff
-ADD PR1775.diff /apollo/PR1775.diff
+ADD PR1754.diff PR1751.diff PR1774.diff PR1775.diff /apollo/
 
 RUN cd /apollo && \
     patch -p1 < PR1751.diff && \
     patch -p1 < PR1754.diff && \
     patch -p1 < PR1774.diff && \
     patch -p1 < PR1775.diff
+
+ADD canned_comments.txt canned_keys.txt /bootstrap/
 
 COPY build.sh /bin/build.sh
 ADD apollo-config.groovy /apollo/apollo-config.groovy
