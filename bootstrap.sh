@@ -51,6 +51,8 @@ if [ -f /bootstrap/canned_comments.txt ]; then
     while read c; do
         if ! arrow cannedcomments show_comment "$c" > /dev/null 2>&1; then
             arrow cannedcomments add_comment "$c"
+        else
+            echo "[BOOTSTRAP] Canned comment $c already exists, skipping"
         fi
     done < /bootstrap/canned_comments.txt
 fi
@@ -59,6 +61,8 @@ if [ -f /bootstrap/canned_keys.txt ]; then
     while read c; do
         if ! arrow cannedkeys show_key "$c" > /dev/null 2>&1; then
             arrow cannedkeys add_key "$c"
+        else
+            echo "[BOOTSTRAP] Canned key $c already exists, skipping"
         fi
     done < /bootstrap/canned_keys.txt
 fi
@@ -67,6 +71,8 @@ if [ -f /bootstrap/canned_values.txt ]; then
     while read c; do
         if ! arrow cannedvalues show_value "$c" > /dev/null 2>&1; then
             arrow cannedvalues add_value "$c"
+        else
+            echo "[BOOTSTRAP] Canned value $c already exists, skipping"
         fi
     done < /bootstrap/canned_values.txt
 fi
