@@ -76,3 +76,13 @@ if [ -f /bootstrap/canned_values.txt ]; then
         fi
     done < /bootstrap/canned_values.txt
 fi
+
+if [ -f /bootstrap/canned_status.txt ]; then
+    while read c; do
+        if ! arrow status show_status "$c" > /dev/null 2>&1; then
+            arrow status add_status "$c"
+        else
+            echo "[BOOTSTRAP] Canned status $c already exists, skipping"
+        fi
+    done < /bootstrap/canned_status.txt
+fi

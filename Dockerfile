@@ -39,8 +39,6 @@ RUN cd /apollo && \
     patch -p1 < PR1774.diff && \
     patch -p1 < PR1775.diff
 
-ADD canned_comments.txt canned_keys.txt /bootstrap/
-
 COPY build.sh /bin/build.sh
 ADD apollo-config.groovy /apollo/apollo-config.groovy
 
@@ -58,6 +56,8 @@ RUN rm -rf ${CATALINA_HOME}/webapps/* && \
     cd ${CATALINA_HOME}/webapps/${CONTEXT_PATH} && \
     jar xvf ../${CONTEXT_PATH}.war && \
     cd /apollo
+
+ADD canned_comments.txt canned_keys.txt canned_status.txt /bootstrap/
 
 ADD launch.sh /launch.sh
 ADD bootstrap.sh /bootstrap.sh
