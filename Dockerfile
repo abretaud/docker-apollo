@@ -31,11 +31,12 @@ RUN cd /tmp && \
     pip install . && \
     cd /apollo
 
-ADD PR1754.diff PR1751.diff PR1774.diff PR1775.diff PR1812.diff /apollo/
+ADD PR1754.diff PR1751.diff PR1771.diff PR1774.diff PR1775.diff PR1812.diff /apollo/
 
 RUN cd /apollo && \
     patch -p1 < PR1751.diff && \
     patch -p1 < PR1754.diff && \
+    patch -p1 < PR1771.diff && \
     patch -p1 < PR1774.diff && \
     patch -p1 < PR1775.diff && \
     patch -p1 < PR1812.diff
