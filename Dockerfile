@@ -9,7 +9,7 @@ RUN apt-get -qq update --fix-missing && \
     git build-essential maven openjdk-8-jdk libpq-dev postgresql-common \
     postgresql-client xmlstarlet netcat libpng-dev zlib1g-dev libexpat1-dev \
     ant curl ssl-cert python-pip python-numpy python-biopython python-setuptools \
-    libyaml-dev libpython-dev && \
+    libyaml-dev libpython-dev jq && \
     apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
@@ -27,7 +27,7 @@ RUN curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz |
 RUN cd /tmp && \
     git clone https://github.com/galaxy-genome-annotation/python-apollo && \
     cd python-apollo/ && \
-    git checkout 32cd4871bc740a79b493b60651262a71b6174668 && \
+    git checkout f2b26aae1fa75162eb19db4c48338fd0608fddf1 && \
     pip install . && \
     cd /apollo
 
