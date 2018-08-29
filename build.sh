@@ -1,2 +1,2 @@
 cd /apollo/ && \
-    ./apollo deploy
+./apollo deploy

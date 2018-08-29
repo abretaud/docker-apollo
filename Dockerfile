@@ -1,5 +1,5 @@
 # Apollo
-# VERSION 2.0.7
+# VERSION 2.1.0
 FROM tomcat:8-jre8
 MAINTAINER Anthony Bretaudeau <anthony.bretaudeau@inra.fr>, Eric Rasche <esr@tamu.edu>, Nathan Dunn <nathandunn@lbl.gov>
 ENV DEBIAN_FRONTEND noninteractive
@@ -20,26 +20,16 @@ RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
 RUN cp /usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/tools.jar && \
     useradd -ms /bin/bash -d /apollo apollo
 
-# 2.0.7
-ENV WEBAPOLLO_VERSION dedf92f7da805620d2dbfb88a8129d025fec7059
+# 2.1.0
+ENV WEBAPOLLO_VERSION 99c7e54c6e74fbc6705d57de216c9b14b2bfb03b
 RUN curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz | tar xzf - --strip-components=1 -C /apollo
 
 RUN cd /tmp && \
     git clone https://github.com/galaxy-genome-annotation/python-apollo && \
     cd python-apollo/ && \
-    git checkout f2b26aae1fa75162eb19db4c48338fd0608fddf1 && \
+    git checkout a5b506662d5124ff86bcff1b181b3f934070e6ca && \
     pip install . && \
     cd /apollo
-
-ADD PR1754.diff PR1751.diff PR1771.diff PR1774.diff PR1775.diff PR1812.diff /apollo/
-
-RUN cd /apollo && \
-    patch -p1 < PR1751.diff && \
-    patch -p1 < PR1754.diff && \
-    patch -p1 < PR1771.diff && \
-    patch -p1 < PR1774.diff && \
-    patch -p1 < PR1775.diff && \
-    patch -p1 < PR1812.diff
 
 COPY build.sh /bin/build.sh
 ADD apollo-config.groovy /apollo/apollo-config.groovy
