@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. /opt/arrow_venv/bin/activate
+
 echo "[BOOTSTRAP] Configuring Arrow in /root/.apollo-arrow.yml"
 
 echo "__default: local" > '/root/.apollo-arrow.yml' &&

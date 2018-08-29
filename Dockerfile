@@ -9,7 +9,7 @@ RUN apt-get -qq update --fix-missing && \
     git build-essential maven openjdk-8-jdk libpq-dev postgresql-common \
     postgresql-client xmlstarlet netcat libpng-dev zlib1g-dev libexpat1-dev \
     ant curl ssl-cert python-pip python-numpy python-biopython python-setuptools \
-    libyaml-dev libpython-dev jq && \
+    libyaml-dev libpython3-dev jq python-virtualenv && \
     apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
@@ -28,8 +28,12 @@ RUN cd /tmp && \
     git clone https://github.com/galaxy-genome-annotation/python-apollo && \
     cd python-apollo/ && \
     git checkout a5b506662d5124ff86bcff1b181b3f934070e6ca && \
+    virtualenv -p python3 /opt/arrow_venv && \
+    . /opt/arrow_venv/bin/activate && \
     pip install . && \
-    cd /apollo
+    deactivate && \
+    cd /apollo && \
+    rm -rf /tmp/python-apollo
 
 COPY build.sh /bin/build.sh
 ADD apollo-config.groovy /apollo/apollo-config.groovy
