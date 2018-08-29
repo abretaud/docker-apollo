@@ -9,7 +9,7 @@ RUN apt-get -qq update --fix-missing && \
     git build-essential maven openjdk-8-jdk libpq-dev postgresql-common \
     postgresql-client xmlstarlet netcat libpng-dev zlib1g-dev libexpat1-dev \
     ant curl ssl-cert python-pip python-numpy python-biopython python-setuptools \
-    libyaml-dev libpython3-dev jq python-virtualenv && \
+    libyaml-dev libpython3-dev jq virtualenv && \
     apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
