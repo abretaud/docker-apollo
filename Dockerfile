@@ -27,7 +27,7 @@ RUN curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz |
 RUN cd /tmp && \
     git clone https://github.com/galaxy-genome-annotation/python-apollo && \
     cd python-apollo/ && \
-    git checkout a5b506662d5124ff86bcff1b181b3f934070e6ca && \
+    git checkout 7ea7df8340c36ab3731f0fe580a8c5d022aaf095 && \
     virtualenv -p python3 /opt/arrow_venv && \
     . /opt/arrow_venv/bin/activate && \
     pip install . && \
