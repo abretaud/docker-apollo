@@ -2,7 +2,7 @@
 FROM tomcat:8.5-jre8-alpine
 
 COPY build.sh /bin/build.sh
-ENV WEBAPOLLO_VERSION 37b4063baeaf24021445ca581701f230b3b5df41
+ENV WEBAPOLLO_VERSION e7adf9392699caa317898391d79d09bbd399f8e8
 ADD apollo-config.groovy /apollo/apollo-config.groovy
 
 ENV CONTEXT_PATH ROOT
