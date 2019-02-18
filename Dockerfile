@@ -1,60 +1,41 @@
 # Apollo
-# VERSION 2.1.0
-FROM tomcat:8-jre8
-MAINTAINER Anthony Bretaudeau <anthony.bretaudeau@inra.fr>, Eric Rasche <esr@tamu.edu>, Nathan Dunn <nathandunn@lbl.gov>
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN apt-get -qq update --fix-missing && \
-    apt-get --no-install-recommends -y install \
-    git build-essential maven openjdk-8-jdk libpq-dev postgresql-common \
-    postgresql-client xmlstarlet netcat libpng-dev zlib1g-dev libexpat1-dev \
-    ant curl ssl-cert python-pip python-numpy python-biopython python-setuptools \
-    libyaml-dev libpython3-dev jq virtualenv && \
-    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
-    apt-get -qq update --fix-missing && \
-    apt-get --no-install-recommends -y install nodejs && \
-    apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-RUN cp /usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/tools.jar && \
-    useradd -ms /bin/bash -d /apollo apollo
-
-# 2.1.0
-ENV WEBAPOLLO_VERSION 99c7e54c6e74fbc6705d57de216c9b14b2bfb03b
-RUN curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz | tar xzf - --strip-components=1 -C /apollo
-
-RUN cd /tmp && \
-    git clone https://github.com/galaxy-genome-annotation/python-apollo && \
-    cd python-apollo/ && \
-    git checkout 7ea7df8340c36ab3731f0fe580a8c5d022aaf095 && \
-    virtualenv -p python3 /opt/arrow_venv && \
-    . /opt/arrow_venv/bin/activate && \
-    pip install . && \
-    deactivate && \
-    cd /apollo && \
-    rm -rf /tmp/python-apollo
+FROM tomcat:8.5-jre8-alpine
 
 COPY build.sh /bin/build.sh
+ENV WEBAPOLLO_VERSION 37b4063baeaf24021445ca581701f230b3b5df41
 ADD apollo-config.groovy /apollo/apollo-config.groovy
-
-RUN chown -R apollo:apollo /apollo
-USER apollo
-RUN bash /bin/build.sh
-USER root
 
 ENV CONTEXT_PATH ROOT
 
-RUN rm -rf ${CATALINA_HOME}/webapps/* && \
-    cp /apollo/target/apollo*.war /apollo.war && \
-    cp /apollo/target/apollo*.war ${CATALINA_HOME}/webapps/${CONTEXT_PATH}.war && \
+RUN apk update && \
+	apk add --update tar && \
+	apk add curl ca-certificates bash nodejs git postgresql-client maven libpng \
+		make g++ zlib-dev expat-dev nodejs-npm sudo openssh-client perl zip gradle yarn && \
+	npm install -g bower && \
+	adduser -s /bin/bash -D -h /apollo apollo && \
+	curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz | \
+	tar xzf - --strip-components=1 -C /apollo && \
+	chown -R apollo:apollo /apollo && \
+	apk add openjdk8 openjdk8-jre && \
+	cp /usr/lib/jvm/java-1.8-openjdk/lib/tools.jar /usr/lib/jvm/java-1.8-openjdk/jre/lib/ext/tools.jar && \
+	curl -s get.sdkman.io | sudo -u apollo /bin/bash && \
+	sudo -u apollo /bin/bash -c "source /apollo/.sdkman/bin/sdkman-init.sh && yes | sdk install grails 2.5.5" && \
+	sudo -u apollo /bin/build.sh && \
+	rm -rf ${CATALINA_HOME}/webapps/* && \
+    cp /apollo/apollo.war ${CATALINA_HOME}/webapps/${CONTEXT_PATH}.war && \
     mkdir ${CATALINA_HOME}/webapps/${CONTEXT_PATH} && \
     cd ${CATALINA_HOME}/webapps/${CONTEXT_PATH} && \
     jar xvf ../${CONTEXT_PATH}.war && \
-    cd /apollo
+	rm -rf ${CATALINA_HOME}/webapps/${CONTEXT_PATH}.war && \
+	apk del curl nodejs git make g++ nodejs-npm openjdk8 sudo gradle yarn
+
+RUN apk add py3-numpy build-base python3-dev && \
+    pip3 install apollo && \
+	apk del build-base python3-dev
 
 ADD canned_comments.txt canned_keys.txt canned_status.txt /bootstrap/
+ADD bootstrap.sh /bootstrap.sh
 
 ADD launch.sh /launch.sh
-ADD bootstrap.sh /bootstrap.sh
+
 CMD "/launch.sh"

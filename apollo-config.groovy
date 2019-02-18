@@ -18,7 +18,7 @@ environments {
 
             properties {
                 // See http://grails.org/doc/latest/guide/conf.html#dataSource for documentation
-                jmxEnabled = false
+                jmxEnabled                    = false
                 initialSize                   = 5
                 maxActive                     = 50
                 minIdle                       = 5
@@ -30,11 +30,11 @@ environments {
                 validationQuery               = "SELECT 1"
                 validationQueryTimeout        = 3
                 validationInterval            = 15000
-                testOnBorrow = true
-                testWhileIdle = true
-                testOnReturn = false
-                jdbcInterceptors = "ConnectionState"
-                defaultTransactionIsolation = java.sql.Connection.TRANSACTION_READ_COMMITTED
+                testOnBorrow                  = true
+                testWhileIdle                 = true
+                testOnReturn                  = false
+                jdbcInterceptors              = "ConnectionState"
+                defaultTransactionIsolation   = java.sql.Connection.TRANSACTION_READ_COMMITTED
             }
         }
         /*dataSource_chado {
@@ -48,7 +48,7 @@ environments {
 
             properties {
                 // See http://grails.org/doc/latest/guide/conf.html#dataSource for documentation
-                jmxEnabled = false
+                jmxEnabled                    = false
                 initialSize                   = 5
                 maxActive                     = 50
                 minIdle                       = 5
@@ -60,11 +60,11 @@ environments {
                 validationQuery               = "SELECT 1"
                 validationQueryTimeout        = 3
                 validationInterval            = 15000
-                testOnBorrow = true
-                testWhileIdle = true
-                testOnReturn = false
-                jdbcInterceptors = "ConnectionState"
-                defaultTransactionIsolation = java.sql.Connection.TRANSACTION_READ_COMMITTED
+                testOnBorrow                  = true
+                testWhileIdle                 = true
+                testOnReturn                  = false
+                jdbcInterceptors              = "ConnectionState"
+                defaultTransactionIsolation   = java.sql.Connection.TRANSACTION_READ_COMMITTED
             }
         }*/
     }
@@ -72,17 +72,17 @@ environments {
 
 apollo {
     default_minimum_intron_size = System.getenv("WEBAPOLLO_MINIMUM_INTRON_SIZE") ? System.getenv("WEBAPOLLO_MINIMUM_INTRON_SIZE").toInteger() : 1
-    history_size                = System.getenv("WEBAPOLLO_HISTORY_SIZE") ? System.getenv("WEBAPOLLO_HISTORY_SIZE").toInteger() : 0
-    overlapper_class            = System.getenv("WEBAPOLLO_OVERLAPPER_CLASS") ?: "org.bbop.apollo.sequence.OrfOverlapper"
+    history_size = System.getenv("WEBAPOLLO_HISTORY_SIZE") ? System.getenv("WEBAPOLLO_HISTORY_SIZE").toInteger() : 0
+    overlapper_class = System.getenv("WEBAPOLLO_OVERLAPPER_CLASS") ?: "org.bbop.apollo.sequence.OrfOverlapper"
     use_cds_for_new_transcripts = System.getenv("WEBAPOLLO_CDS_FOR_NEW_TRANSCRIPTS").equals("true")
-    feature_has_dbxrefs         = System.getenv("WEBAPOLLO_FEATURE_HAS_DBXREFS").equals("true")
-    feature_has_attributes      = System.getenv("WEBAPOLLO_FEATURE_HAS_ATTRS").equals("true")
-    feature_has_pubmed_ids      = System.getenv("WEBAPOLLO_FEATURE_HAS_PUBMED").equals("true")
-    feature_has_go_ids          = System.getenv("WEBAPOLLO_FEATURE_HAS_GO").equals("true")
-    feature_has_comments        = System.getenv("WEBAPOLLO_FEATURE_HAS_COMMENTS").equals("true")
-    feature_has_status          = System.getenv("WEBAPOLLO_FEATURE_HAS_STATUS").equals("true")
-    translation_table           = "/config/translation_tables/ncbi_" + (System.getenv("WEBAPOLLO_TRANSLATION_TABLE") ?: "1") + "_translation_table.txt"
-    get_translation_code        = System.getenv("WEBAPOLLO_TRANSLATION_TABLE") ? System.getenv("WEBAPOLLO_TRANSLATION_TABLE").toInteger() : 1
+    feature_has_dbxrefs = System.getenv("WEBAPOLLO_FEATURE_HAS_DBXREFS").equals("true")
+    feature_has_attributes = System.getenv("WEBAPOLLO_FEATURE_HAS_ATTRS").equals("true")
+    feature_has_pubmed_ids = System.getenv("WEBAPOLLO_FEATURE_HAS_PUBMED").equals("true")
+    feature_has_go_ids = System.getenv("WEBAPOLLO_FEATURE_HAS_GO").equals("true")
+    feature_has_comments = System.getenv("WEBAPOLLO_FEATURE_HAS_COMMENTS").equals("true")
+    feature_has_status = System.getenv("WEBAPOLLO_FEATURE_HAS_STATUS").equals("true")
+    translation_table = "/config/translation_tables/ncbi_" + (System.getenv("WEBAPOLLO_TRANSLATION_TABLE") ?: "1") + "_translation_table.txt"
+    get_translation_code = System.getenv("WEBAPOLLO_TRANSLATION_TABLE") ? System.getenv("WEBAPOLLO_TRANSLATION_TABLE").toInteger() : 1
 
     // TODO: should come from config or via preferences database
     splice_donor_sites = System.getenv("WEBAPOLLO_SPLICE_DONOR_SITES") ? System.getenv("WEBAPOLLO_SPLICE_DONOR_SITES").split(",") : ["GT"]
@@ -117,32 +117,53 @@ apollo {
 jbrowse {
     git {
         url = "https://github.com/GMOD/jbrowse"
-        tag = "maint/1.12.5-apollo"
-        alwaysPull = true
-        alwaysRecheck = true
+        branch = "1.16.2-release"
     }
     plugins {
         WebApollo{
             included = true
         }
-        /*NeatHTMLFeatures{
+        NeatHTMLFeatures{
             included = true
         }
         NeatCanvasFeatures{
             included = true
-        }*/
+        }
         RegexSequenceSearch{
             included = true
         }
         HideTrackLabels{
             included = true
         }
-        // TODO
-        /*GCContent{
-            git = 'https://github.com/cmdcolin/GCContent'
+        GCContent{
+            git = 'https://github.com/elsiklab/GCContent'
             branch = 'master'
             alwaysRecheck = "true"
             alwaysPull = "true"
-        }*/
+        }
+        BlastView{
+            git = 'https://github.com/TAMU-CPT/blastview'
+            branch = 'master'
+            alwaysRecheck = "true"
+            alwaysPull = "true"
+        }
+        ComboTrackSelector{
+            git = 'https://github.com/Arabidopsis-Information-Portal/ComboTrackSelector'
+            branch = 'master'
+            alwaysRecheck = "true"
+            alwaysPull = "true"
+        }
+        MultiBigWig{
+            git = 'https://github.com/elsiklab/multibigwig'
+            branch = 'master'
+            alwaysRecheck = "true"
+            alwaysPull = "true"
+        }
+        bookmarks{
+            git = 'https://github.com/TAMU-CPT/bookmarks-jbrowse'
+            branch = 'master'
+            alwaysRecheck = "true"
+            alwaysPull = "true"
+        }
     }
 }
