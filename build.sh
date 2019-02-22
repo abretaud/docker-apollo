@@ -9,7 +9,6 @@ cd /apollo/ && \
 
 	# Temp patch https://github.com/GMOD/Apollo/pull/2068
 	patch -p1 < /tmp/2068.diff && \
-	rm /tmp/2068.diff
 
 	./apollo deploy && \
 	./apollo deploy && \

@@ -30,7 +30,8 @@ RUN apk update && \
     cd ${CATALINA_HOME}/webapps/${CONTEXT_PATH} && \
     jar xvf ../${CONTEXT_PATH}.war && \
 	rm -rf ${CATALINA_HOME}/webapps/${CONTEXT_PATH}.war && \
-	apk del curl nodejs git make g++ nodejs-npm openjdk8 sudo gradle yarn
+	apk del curl nodejs git make g++ nodejs-npm openjdk8 sudo gradle yarn && \
+	rm /tmp/2068.diff
 
 RUN apk add py3-numpy build-base python3-dev && \
     pip3 install apollo && \
