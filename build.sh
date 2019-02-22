@@ -6,6 +6,11 @@ export JAVA_HOME=/usr/lib/jvm/java-1.8-openjdk/jre
 source $HOME/.sdkman/bin/sdkman-init.sh
 
 cd /apollo/ && \
+
+	# Temp patch https://github.com/GMOD/Apollo/pull/2068
+	patch -p1 < /tmp/2068.diff && \
+	rm /tmp/2068.diff
+
 	./apollo deploy && \
 	./apollo deploy && \
 	# Move to tmp dir

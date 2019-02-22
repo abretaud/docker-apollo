@@ -7,6 +7,9 @@ ADD apollo-config.groovy /apollo/apollo-config.groovy
 
 ENV CONTEXT_PATH ROOT
 
+# Temp patch until https://github.com/GMOD/Apollo/pull/2068 is merged
+ADD 2068.diff /tmp/2068.diff
+
 RUN apk update && \
 	apk add --update tar && \
 	apk add curl ca-certificates bash nodejs git postgresql-client maven libpng \
