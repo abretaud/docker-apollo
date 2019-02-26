@@ -13,7 +13,7 @@ ADD 2070.diff /tmp/2070.diff
 
 RUN apk update && \
 	apk add --update tar && \
-	apk add curl ca-certificates bash nodejs git postgresql-client maven libpng \
+	apk add curl ca-certificates bash nodejs git postgresql-client maven libpng wget \
 		make g++ zlib-dev expat-dev nodejs-npm sudo openssh-client perl zip gradle yarn && \
 	npm install -g bower && \
 	adduser -s /bin/bash -D -h /apollo apollo && \
