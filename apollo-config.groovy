@@ -112,6 +112,21 @@ apollo {
         firstName = System.getenv("APOLLO_ADMIN_FIRST_NAME") ?: "Ad"
         lastName = System.getenv("APOLLO_ADMIN_LAST_NAME") ?: "min"
     }
+
+    sequence_search_tools = [
+            blat_nuc : [
+                    search_exe  : "/usr/local/bin/blat",
+                    search_class: "org.bbop.apollo.sequence.search.blat.BlatCommandLineNucleotideToNucleotide",
+                    name        : "Blat nucleotide",
+                    params      : ""
+            ],
+            blat_prot: [
+                    search_exe  : "/usr/local/bin/blat",
+                    search_class: "org.bbop.apollo.sequence.search.blat.BlatCommandLineProteinToNucleotide",
+                    name        : "Blat protein",
+                    params      : ""
+            ]
+    ]
 }
 
 jbrowse {
