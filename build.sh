@@ -11,6 +11,7 @@ cd /apollo/ && \
 	patch -p1 < /tmp/2068.diff && \
 	patch -p1 < /tmp/2070.diff && \
 	patch -p1 < /tmp/2097.diff && \
+	patch -p1 < /tmp/2098.diff && \
 
 	./apollo deploy && \
 	./apollo deploy && \

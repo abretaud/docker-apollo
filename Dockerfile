@@ -11,6 +11,7 @@ ENV CONTEXT_PATH ROOT
 ADD 2068.diff /tmp/2068.diff
 ADD 2070.diff /tmp/2070.diff
 ADD 2097.diff /tmp/2097.diff
+ADD 2098.diff /tmp/2098.diff
 
 RUN apk update && \
 	apk add --update tar && \
@@ -33,7 +34,7 @@ RUN apk update && \
     jar xvf ../${CONTEXT_PATH}.war && \
 	rm -rf ${CATALINA_HOME}/webapps/${CONTEXT_PATH}.war && \
 	apk del curl nodejs git make g++ nodejs-npm openjdk8 sudo gradle yarn && \
-	rm /tmp/2068.diff /tmp/2070.diff /tmp/2097.diff
+	rm /tmp/2068.diff /tmp/2070.diff /tmp/2097.diff /tmp/2098.diff
 
 RUN apk add py3-numpy build-base python3-dev && \
     pip3 install apollo && \
