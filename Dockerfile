@@ -40,6 +40,18 @@ RUN apk add py3-numpy build-base python3-dev && \
     pip3 install apollo && \
 	apk del build-base python3-dev
 
+# This is to fix problems with mounted blat failing to run as it depends on some glibc things
+# Safe to remove if not using blat
+ENV GLIBC_VERSION 2.29-r0
+RUN apk add --update curl && \
+	curl -Lo /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
+	curl -Lo glibc.apk "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk" && \
+	curl -Lo glibc-bin.apk "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk" && \
+	apk add glibc-bin.apk glibc.apk && \
+	/usr/glibc-compat/sbin/ldconfig /lib /usr/glibc-compat/lib && \
+	apk del curl && \
+	rm -rf glibc.apk glibc-bin.apk /var/cache/apk/*
+
 ADD canned_comments.txt canned_keys.txt canned_status.txt /bootstrap/
 ADD bootstrap.sh /bootstrap.sh
 
