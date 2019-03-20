@@ -42,6 +42,7 @@ RUN apk add py3-numpy build-base python3-dev && \
 
 # This is to fix problems with mounted blat failing to run as it depends on some glibc things
 # Safe to remove if not using blat
+# Borrowed from https://github.com/jeanblanchard/docker-alpine-glibc/blob/master/Dockerfile
 ENV GLIBC_VERSION 2.29-r0
 RUN apk add --update curl && \
 	curl -Lo /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub && \
