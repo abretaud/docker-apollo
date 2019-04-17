@@ -13,9 +13,10 @@ cd /apollo/ && \
 	patch -p1 < /tmp/2097.diff && \
 	patch -p1 < /tmp/2098.diff && \
 	patch -p1 < /tmp/2100.diff && \
+	patch -p1 < /tmp/2130.diff && \
 
 	./apollo deploy && \
-	./apollo deploy && \
+
 	# Move to tmp dir
 	cp /apollo/target/apollo*.war /tmp/ && \
 	# So we can remove ~1.6 GB of cruft from the image. Ignore errors because cannot remove parent dir /apollo/
