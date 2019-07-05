@@ -2,18 +2,13 @@
 FROM tomcat:8.5-jre8-alpine
 
 COPY build.sh /bin/build.sh
-ENV WEBAPOLLO_VERSION df779aad1fcdfac2a461488d92ab2c191e993c3a
+ENV WEBAPOLLO_VERSION 0821bd93bd1dccc685630d385e287a166f2fe39e
 ADD apollo-config.groovy /apollo/apollo-config.groovy
 
 ENV CONTEXT_PATH ROOT
 
-# Temp patch until https://github.com/GMOD/Apollo/pull/2068 is merged
-ADD 2068.diff /tmp/2068.diff
-ADD 2070.diff /tmp/2070.diff
-ADD 2097.diff /tmp/2097.diff
-ADD 2098.diff /tmp/2098.diff
-ADD 2100.diff /tmp/2100.diff
-ADD 2130.diff /tmp/2130.diff
+# Temp Apollo patches when needed...
+# ADD xxx.diff /tmp/xxx.diff
 
 RUN apk update && \
 	apk add --update tar && \
@@ -35,8 +30,8 @@ RUN apk update && \
     cd ${CATALINA_HOME}/webapps/${CONTEXT_PATH} && \
     jar xvf ../${CONTEXT_PATH}.war && \
 	rm -rf ${CATALINA_HOME}/webapps/${CONTEXT_PATH}.war && \
-	apk del curl nodejs git make g++ nodejs-npm openjdk8 sudo gradle yarn && \
-	rm /tmp/2068.diff /tmp/2070.diff /tmp/2097.diff /tmp/2098.diff /tmp/2100.diff /tmp/2130.diff
+	apk del curl nodejs git make g++ nodejs-npm openjdk8 sudo gradle yarn
+#	 && \ rm /tmp/xxx.diff
 
 RUN apk add py3-numpy build-base python3-dev && \
     pip3 install apollo && \

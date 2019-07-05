@@ -7,13 +7,8 @@ source $HOME/.sdkman/bin/sdkman-init.sh
 
 cd /apollo/ && \
 
-	# Temp patch https://github.com/GMOD/Apollo/pull/2068
-	patch -p1 < /tmp/2068.diff && \
-	patch -p1 < /tmp/2070.diff && \
-	patch -p1 < /tmp/2097.diff && \
-	patch -p1 < /tmp/2098.diff && \
-	patch -p1 < /tmp/2100.diff && \
-	patch -p1 < /tmp/2130.diff && \
+	# Temp Apollo patches when needed...
+	# patch -p1 < /tmp/xx.diff && \
 
 	./apollo deploy && \
 
