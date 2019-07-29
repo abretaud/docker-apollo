@@ -2,13 +2,13 @@
 FROM tomcat:8.5-jre8-alpine
 
 COPY build.sh /bin/build.sh
-ENV WEBAPOLLO_VERSION 0821bd93bd1dccc685630d385e287a166f2fe39e
+ENV WEBAPOLLO_VERSION 757ac1dede4eccca1d9c9acd6b837efb08ec45c7
 ADD apollo-config.groovy /apollo/apollo-config.groovy
 
 ENV CONTEXT_PATH ROOT
 
 # Temp Apollo patches when needed...
-# ADD xxx.diff /tmp/xxx.diff
+ADD 2209.diff /tmp/2209.diff
 
 RUN apk update && \
 	apk add --update tar && \
@@ -30,8 +30,8 @@ RUN apk update && \
     cd ${CATALINA_HOME}/webapps/${CONTEXT_PATH} && \
     jar xvf ../${CONTEXT_PATH}.war && \
 	rm -rf ${CATALINA_HOME}/webapps/${CONTEXT_PATH}.war && \
-	apk del curl nodejs git make g++ nodejs-npm openjdk8 sudo gradle yarn
-#	 && \ rm /tmp/xxx.diff
+	apk del curl nodejs git make g++ nodejs-npm openjdk8 sudo gradle yarn && \
+	rm /tmp/2209.diff
 
 RUN apk add py3-numpy build-base python3-dev && \
     pip3 install apollo && \
