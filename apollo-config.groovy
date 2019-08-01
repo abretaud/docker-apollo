@@ -71,6 +71,7 @@ environments {
 }
 
 apollo {
+    common_data_directory = System.getenv("WEBAPOLLO_COMMON_DATA") ? System.getenv("WEBAPOLLO_COMMON_DATA") : "/data/temporary/apollo_data"
     default_minimum_intron_size = System.getenv("WEBAPOLLO_MINIMUM_INTRON_SIZE") ? System.getenv("WEBAPOLLO_MINIMUM_INTRON_SIZE").toInteger() : 1
     history_size = System.getenv("WEBAPOLLO_HISTORY_SIZE") ? System.getenv("WEBAPOLLO_HISTORY_SIZE").toInteger() : 0
     overlapper_class = System.getenv("WEBAPOLLO_OVERLAPPER_CLASS") ?: "org.bbop.apollo.sequence.OrfOverlapper"

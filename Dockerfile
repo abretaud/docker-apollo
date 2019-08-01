@@ -5,6 +5,10 @@ COPY build.sh /bin/build.sh
 ENV WEBAPOLLO_VERSION 757ac1dede4eccca1d9c9acd6b837efb08ec45c7
 ADD apollo-config.groovy /apollo/apollo-config.groovy
 
+# Dir where uploaded jbrowse data will be stored
+VOLUME ["/apollo-data-local/"]
+ENV WEBAPOLLO_COMMON_DATA /apollo-data-local/
+
 ENV CONTEXT_PATH ROOT
 
 # Temp Apollo patches when needed...
