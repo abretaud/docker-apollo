@@ -9,6 +9,7 @@ cd /apollo/ && \
 
 	# Temp Apollo patches when needed...
 	patch -p1 < /tmp/2209.diff && \
+	patch -p1 < /tmp/2218.diff && \
 
 	./apollo deploy && \
 
