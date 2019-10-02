@@ -1,5 +1,5 @@
---- grails-app/controllers/org/bbop/apollo/OrganismController.groovy	2019-10-02 10:38:25.013704565 +0200
-+++ grails-app/controllers/org/bbop/apollo/OrganismController.groovy	2019-10-02 11:01:25.250756293 +0200
+--- a/grails-app/controllers/org/bbop/apollo/OrganismController.groovy	2019-10-02 10:38:25.013704565 +0200
++++ b/grails-app/controllers/org/bbop/apollo/OrganismController.groovy	2019-10-02 11:01:25.250756293 +0200
 @@ -3,9 +3,7 @@
  import grails.converters.JSON
  import grails.transaction.NotTransactional
