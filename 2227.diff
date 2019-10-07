@@ -29,8 +29,8 @@
 @@ -1230,32 +1228,46 @@
              Boolean madeObsolete
              if (organism) {
--                 log.debug "Updating organism info ${organismJson as JSON}"
-+                 log.debug "Updating organism info ${organismJson.name}"
+-                log.debug "Updating organism info ${organismJson as JSON}"
++                log.debug "Updating organism info ${organismJson.name}"
 -                organism.commonName = organismJson.name
 -                organism.blatdb = organismJson.blatdb ?: null
 -                organism.species = organismJson.species ?: null
