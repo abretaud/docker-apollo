@@ -26,7 +26,7 @@
      ])
      @Transactional
      def updateOrganismInfo() {
-@@ -1230,32 +1228,45 @@
+@@ -1230,32 +1228,46 @@
              Boolean madeObsolete
              if (organism) {
                  log.debug "Updating organism info ${organismJson as JSON}"
@@ -66,7 +66,7 @@
 +//        CommonsMultipartFile searchDatabaseDataFile = request.getFile(FeatureStringEnum.SEARCH_DATABASE_DATA.value)
 +        if (organismDataFile ) {
 +          File archiveFile = new File(organismDataFile.getOriginalFilename())
-           organismDataFile.transferTo(archiveFile)
++          organismDataFile.transferTo(archiveFile)
 +          File organismDirectory = new File(organism.directory)
 +          assert  organismDirectory.deleteDir()
 +          assert organismDirectory.mkdir()
