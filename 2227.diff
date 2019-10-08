@@ -26,7 +26,7 @@
      ])
      @Transactional
      def updateOrganismInfo() {
-@@ -1230,32 +1228,57 @@
+@@ -1230,32 +1228,58 @@
              Boolean madeObsolete
              if (organism) {
 -                log.debug "Updating organism info ${organismJson as JSON}"
