@@ -75,7 +75,7 @@
 +        }
 +
 +        // if directory has a "searchDatabaseData" directory then any file in that that is a 2bit is the blatdb
-+        String foundBlatdb = organismService.findBlatDB(organism.directory.absolutePath)
++        String foundBlatdb = organismService.findBlatDB(organismDirectory.absolutePath)
 +        if (organismJson.blatdb) {
 +          organism.blatdb = organismJson.blatdb
 +        }
