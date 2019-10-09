@@ -112,28 +112,15 @@ diff --git a/grails-app/services/org/bbop/apollo/SequenceService.groovy b/grails
 index 0e976c375..24d420930 100644
 --- a/grails-app/services/org/bbop/apollo/SequenceService.groovy
 +++ b/grails-app/services/org/bbop/apollo/SequenceService.groovy
-@@ -324,18 +324,14 @@ class SequenceService {
+@@ -324,6 +324,9 @@ class SequenceService {
                  new JsonSlurper().parse(r)
              }
- 
--//            def sequences = Sequence.findAllByOrganism(organism)
--//            def preferences = Preference.executeQuery("select p from UserOrganismPreference  p join p.sequence s join s.organism o where o = :organism",[organism:organism])
--//
--//          println "preferences ${preferences}"
--//          Preference.deleteAll(preferences)
--//
--//
--//          Sequence.deleteAll(sequences)
+
+-            Sequence.deleteAll(Sequence.findAllByOrganism(organism))
 +          def sequences = Sequence.findAllByOrganism(organism)
 +          def preferences = Preference.executeQuery("select p from UserOrganismPreference  p join p.sequence s join s.organism o where o = :organism",[organism:organism])
 +          Preference.deleteAll(preferences)
 +          Sequence.deleteAll(sequences)
- 
-           // this will fail if folks have actively been working on this and preferences are set
-           // otherwise if we remove all of the sequences annotations will need to be removed as well
--          Sequence.deleteAll(Sequence.findAllByOrganism(organism))
-+//          Sequence.deleteAll(Sequence.findAllByOrganism(organism))
- 
              refSeqs.each { refSeq ->
                  int length;
 diff --git a/src/gwt/org/bbop/apollo/gwt/client/OrganismPanel.java b/src/gwt/org/bbop/apollo/gwt/client/OrganismPanel.java
