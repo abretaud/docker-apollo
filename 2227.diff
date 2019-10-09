@@ -112,10 +112,10 @@ diff --git a/grails-app/services/org/bbop/apollo/SequenceService.groovy b/grails
 index 0e976c375..24d420930 100644
 --- a/grails-app/services/org/bbop/apollo/SequenceService.groovy
 +++ b/grails-app/services/org/bbop/apollo/SequenceService.groovy
-@@ -324,6 +324,9 @@ class SequenceService {
+@@ -324,7 +324,10 @@
                  new JsonSlurper().parse(r)
              }
-
+ 
 -            Sequence.deleteAll(Sequence.findAllByOrganism(organism))
 +          def sequences = Sequence.findAllByOrganism(organism)
 +          def preferences = Preference.executeQuery("select p from UserOrganismPreference  p join p.sequence s join s.organism o where o = :organism",[organism:organism])
@@ -123,6 +123,7 @@ index 0e976c375..24d420930 100644
 +          Sequence.deleteAll(sequences)
              refSeqs.each { refSeq ->
                  int length;
+                 if (refSeq.length) {
 diff --git a/src/gwt/org/bbop/apollo/gwt/client/OrganismPanel.java b/src/gwt/org/bbop/apollo/gwt/client/OrganismPanel.java
 index f43b1c06a..174b8f1fb 100644
 --- a/src/gwt/org/bbop/apollo/gwt/client/OrganismPanel.java
