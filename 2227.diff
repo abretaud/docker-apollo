@@ -1,16 +1,17 @@
 --- a/grails-app/controllers/org/bbop/apollo/OrganismController.groovy	2019-10-02 10:38:25.013704565 +0200
 +++ b/grails-app/controllers/org/bbop/apollo/OrganismController.groovy	2019-10-02 11:01:25.250756293 +0200
-@@ -3,9 +3,7 @@
+@@ -3,9 +3,8 @@
  import grails.converters.JSON
  import grails.transaction.NotTransactional
  import grails.transaction.Transactional
 -import groovy.io.FileType
  import htsjdk.samtools.reference.FastaSequenceIndexCreator
++import org.apache.shiro.web.servlet.ShiroHttpServletRequest
 -import org.apache.commons.io.FileUtils
  import org.bbop.apollo.gwt.shared.FeatureStringEnum
  import org.bbop.apollo.gwt.shared.GlobalPermissionEnum
  import org.bbop.apollo.gwt.shared.PermissionEnum
-@@ -27,7 +25,6 @@
+@@ -27,7 +26,6 @@
  import javax.servlet.http.HttpServletResponse
  import java.nio.file.FileSystems
  import java.nio.file.Path
@@ -18,7 +19,7 @@
 
  import static org.springframework.http.HttpStatus.NOT_FOUND
 
-@@ -1220,6 +1217,7 @@
+@@ -1220,6 +1218,7 @@
              , @RestApiParam(name = "name", type = "string", paramType = RestApiParamType.QUERY, description = "a common name used for the organism")
              , @RestApiParam(name = "nonDefaultTranslationTable", type = "string", paramType = RestApiParamType.QUERY, description = "non-default translation table")
              , @RestApiParam(name = "metadata", type = "string", paramType = RestApiParamType.QUERY, description = "organism metadata")
@@ -26,9 +27,10 @@
      ])
      @Transactional
      def updateOrganismInfo() {
-@@ -1230,32 +1228,58 @@
+@@ -1230,32 +1229,63 @@
              Boolean madeObsolete
              if (organism) {
++        String oldOrganismDirectory = organism.directory
 -                log.debug "Updating organism info ${organismJson as JSON}"
 +                log.debug "Updating organism info ${organismJson.name}"
 -                organism.commonName = organismJson.name
@@ -41,7 +43,7 @@
                  //if the organismJson.metadata is null, remain the old metadata
                  organism.metadata = organismJson.metadata ? organismJson.metadata.toString() : organism.metadata
 -                organism.directory = organismJson.directory
-+                organism.directory = organismJson.directory ?: organism.directory
++                organism.directory = organismJson.directory 
                  organism.publicMode = organismJson.publicMode ?: false
                  madeObsolete = !organism.obsolete && organismJson.obsolete
                  organism.obsolete = organismJson.obsolete ?: false
@@ -62,17 +64,19 @@
                      sequenceService.updateGenomeFasta(organism)
                  }
 
-+        CommonsMultipartFile organismDataFile = request.getFile(FeatureStringEnum.ORGANISM_DATA.value)
-+//        CommonsMultipartFile searchDatabaseDataFile = request.getFile(FeatureStringEnum.SEARCH_DATABASE_DATA.value)
++        CommonsMultipartFile organismDataFile = null
++        if (!request instanceof ShiroHttpServletRequest) {
++          organismDataFile = request.getFile(FeatureStringEnum.ORGANISM_DATA.value)
++        }
 +        String foundBlatdb = null
-+        if (organismDataFile ) {
++        if (organismDataFile) {
 +          File archiveFile = new File(organismDataFile.getOriginalFilename())
 +          organismDataFile.transferTo(archiveFile)
 +          File organismDirectory = new File(organism.directory)
-+          assert  organismDirectory.deleteDir()
++          assert organismDirectory.deleteDir()
 +          assert organismDirectory.mkdir()
 +          assert organismDirectory.setWritable(true)
-+          fileService.decompress(archiveFile, organism.directory , null, false)
++          fileService.decompress(archiveFile, organism.directory, null, false)
 +          foundBlatdb = organismService.findBlatDB(organismDirectory.absolutePath)
 +        }
 +
@@ -92,8 +96,10 @@
 +            permissionService.removeAllPermissions(organism)
 +          }
 +          organism.save(flush: true, insert: false, failOnError: true)
-+          sequenceService.loadRefSeqs(organism)
-+//          preferenceService.setCurrentOrganism(permissionService.getCurrentUser(requestObject), organism, clientToken)
++          if (oldOrganismDirectory!=organism.directory) {
++            // we need to reload
++            sequenceService.loadRefSeqs(organism)
++          }
 +        } else {
 +          throw new Exception("Bad organism directory: " + organism.directory)
 +        }
@@ -102,3 +108,118 @@
              } else {
                  throw new Exception('organism not found')
              }
+diff --git a/grails-app/services/org/bbop/apollo/SequenceService.groovy b/grails-app/services/org/bbop/apollo/SequenceService.groovy
+index 0e976c375..24d420930 100644
+--- a/grails-app/services/org/bbop/apollo/SequenceService.groovy
++++ b/grails-app/services/org/bbop/apollo/SequenceService.groovy
+@@ -324,18 +324,14 @@ class SequenceService {
+                 new JsonSlurper().parse(r)
+             }
+ 
+-//            def sequences = Sequence.findAllByOrganism(organism)
+-//            def preferences = Preference.executeQuery("select p from UserOrganismPreference  p join p.sequence s join s.organism o where o = :organism",[organism:organism])
+-//
+-//          println "preferences ${preferences}"
+-//          Preference.deleteAll(preferences)
+-//
+-//
+-//          Sequence.deleteAll(sequences)
++          def sequences = Sequence.findAllByOrganism(organism)
++          def preferences = Preference.executeQuery("select p from UserOrganismPreference  p join p.sequence s join s.organism o where o = :organism",[organism:organism])
++          Preference.deleteAll(preferences)
++          Sequence.deleteAll(sequences)
+ 
+           // this will fail if folks have actively been working on this and preferences are set
+           // otherwise if we remove all of the sequences annotations will need to be removed as well
+-          Sequence.deleteAll(Sequence.findAllByOrganism(organism))
++//          Sequence.deleteAll(Sequence.findAllByOrganism(organism))
+ 
+             refSeqs.each { refSeq ->
+                 int length;
+diff --git a/src/gwt/org/bbop/apollo/gwt/client/OrganismPanel.java b/src/gwt/org/bbop/apollo/gwt/client/OrganismPanel.java
+index f43b1c06a..174b8f1fb 100644
+--- a/src/gwt/org/bbop/apollo/gwt/client/OrganismPanel.java
++++ b/src/gwt/org/bbop/apollo/gwt/client/OrganismPanel.java
+@@ -331,8 +331,14 @@ public void loadOrganismInfo(OrganismInfo organismInfo) {
+         species.setText(organismInfo.getSpecies());
+         species.setEnabled(isEditable);
+ 
+-        sequenceFile.setText(organismInfo.getDirectory());
+-        sequenceFile.setEnabled(isEditable);
++        if (organismInfo.getNumFeatures() == 0) {
++          sequenceFile.setText(organismInfo.getDirectory() );
++          sequenceFile.setEnabled(isEditable);
++        }
++        else{
++          sequenceFile.setText(organismInfo.getDirectory() + " (remove " + organismInfo.getNumFeatures() + "annotations to change)" );
++          sequenceFile.setEnabled(false);
++        }
+ 
+         publicMode.setValue(organismInfo.getPublicMode());
+         publicMode.setEnabled(isEditable);
+@@ -654,10 +660,27 @@ public void handleGenusChange(ChangeEvent changeEvent) {
+ 
+     @UiHandler("sequenceFile")
+     public void handleOrganismDirectory(ChangeEvent changeEvent) {
++      try {
+         if (singleSelectionModel.getSelectedObject() != null) {
+-            singleSelectionModel.getSelectedObject().setDirectory(sequenceFile.getText());
+-            updateOrganismInfo();
++          Bootbox.confirm("Changing the source directory will remove all existing annotations.  Continue?", new ConfirmCallback() {
++            @Override
++            public void callback(boolean result) {
++              if(result) {
++                singleSelectionModel.getSelectedObject().setDirectory(sequenceFile.getText());
++                updateOrganismInfo();
++              }
++            }
++          });
+         }
++      } catch (Exception e) {
++        Bootbox.alert("There was a problem updating the organism: "+e.getMessage());
++        Bootbox.confirm("Reload", new ConfirmCallback() {
++          @Override
++          public void callback(boolean result) {
++            if(result) Window.Location.reload();
++          }
++        });
++      }
+     }
+ 
+     private void updateOrganismInfo() {
+diff --git a/src/gwt/org/bbop/apollo/gwt/client/rest/OrganismRestService.java b/src/gwt/org/bbop/apollo/gwt/client/rest/OrganismRestService.java
+index 8767ead15..b132dfbde 100644
+--- a/src/gwt/org/bbop/apollo/gwt/client/rest/OrganismRestService.java
++++ b/src/gwt/org/bbop/apollo/gwt/client/rest/OrganismRestService.java
+@@ -1,6 +1,5 @@
+ package org.bbop.apollo.gwt.client.rest;
+ 
+-import com.google.gwt.core.client.GWT;
+ import com.google.gwt.http.client.*;
+ import com.google.gwt.json.client.*;
+ import com.google.gwt.user.client.Window;
+@@ -14,8 +13,8 @@
+ import org.bbop.apollo.gwt.client.event.OrganismChangeEvent;
+ import org.bbop.apollo.gwt.shared.FeatureStringEnum;
+ import org.gwtbootstrap3.extras.bootbox.client.Bootbox;
++import org.gwtbootstrap3.extras.bootbox.client.callback.ConfirmCallback;
+ 
+-import java.util.ArrayList;
+ import java.util.List;
+ 
+ /**
+@@ -71,8 +70,13 @@ public void onResponseReceived(Request request, Response response) {
+                     List<OrganismInfo> organismInfoList  = OrganismInfoConverter.convertJSONStringToOrganismInfoList(response.getText());
+                     organismChangeEvent.setOrganismInfoList(organismInfoList);
+                     Annotator.eventBus.fireEvent(organismChangeEvent);
++                  Bootbox.confirm("Organism updated.  Reload?", new ConfirmCallback() {
++                    @Override
++                    public void callback(boolean result) {
++                      if(result) Window.Location.reload();
++                    }
++                  });
+                 }
+-
+             }
+ 
+             @Override
