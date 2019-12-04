@@ -2,7 +2,7 @@
 FROM tomcat:8.5-jre8-alpine
 
 COPY build.sh /bin/build.sh
-ENV WEBAPOLLO_VERSION 757ac1dede4eccca1d9c9acd6b837efb08ec45c7
+ENV WEBAPOLLO_VERSION b8755f6e19935d16e83d88d16ce611f373e3bc4c
 ADD apollo-config.groovy /apollo/apollo-config.groovy
 
 # Dir where uploaded jbrowse data will be stored
@@ -12,9 +12,7 @@ ENV WEBAPOLLO_COMMON_DATA /apollo-data-local/
 ENV CONTEXT_PATH ROOT
 
 # Temp Apollo patches when needed...
-ADD 2209.diff /tmp/2209.diff
-ADD 2218.diff /tmp/2218.diff
-ADD 2227.diff /tmp/2227.diff
+#ADD 2209.diff /tmp/2209.diff
 
 RUN apk update && \
 	apk add --update tar && \
@@ -37,7 +35,7 @@ RUN apk update && \
     jar xvf ../${CONTEXT_PATH}.war && \
 	rm -rf ${CATALINA_HOME}/webapps/${CONTEXT_PATH}.war && \
 	apk del curl nodejs git make g++ nodejs-npm openjdk8 sudo gradle yarn && \
-	rm /tmp/2209.diff /tmp/2218.diff /tmp/2227.diff
+	rm /tmp/*.diff
 
 RUN apk add py3-numpy build-base python3-dev && \
     pip3 install apollo && \
