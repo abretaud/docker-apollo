@@ -18,6 +18,7 @@ RUN apk update && \
 	apk add --update tar && \
 	apk add curl ca-certificates bash nodejs git postgresql-client maven libpng wget \
 		make g++ zlib-dev expat-dev nodejs-npm sudo openssh-client perl zip gradle yarn && \
+	npm config set unsafe-perm true && \
 	npm install -g bower && \
 	adduser -s /bin/bash -D -h /apollo apollo && \
 	curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz | \
