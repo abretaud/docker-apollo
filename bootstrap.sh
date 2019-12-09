@@ -34,7 +34,6 @@ for u in $(echo $APOLLO_REMOTE_ADMINS | tr "," "\n"); do
         randomPass=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
         arrow users create_user --role admin --metadata '{"INTERNAL_PASSWORD":"'$randomPass'"}' $u REMOTE_USER $u $randomPass
-        arrow users add_to_group $DEFAULT_GROUP $u
     fi
 done
 
