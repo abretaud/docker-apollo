@@ -26,15 +26,6 @@ fi
 
 echo "[BOOTSTRAP] Apollo is up, bootstrapping"
 
-# Create a default group
-DEFAULT_GROUP="annotators"
-if arrow groups get_groups | grep name | grep $DEFAULT_GROUP -q; then
-    echo "[BOOTSTRAP] Group $u already exists, skipping"
-else
-    echo "[BOOTSTRAP] Creating group $DEFAULT_GROUP"
-    arrow groups create_group $DEFAULT_GROUP
-fi
-
 for u in $(echo $APOLLO_REMOTE_ADMINS | tr "," "\n"); do
     if arrow users get_users | grep username | grep $u -q; then
         echo "[BOOTSTRAP] User $u already exists, skipping"

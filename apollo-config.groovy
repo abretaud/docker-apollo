@@ -95,7 +95,7 @@ apollo {
             "name":"Remote User Authenticator",
             "className":"remoteUserAuthenticatorService",
             "active":true,
-            "params":["default_group": "annotators"]
+            "params":[]
         ],
         [
             "name":"Username Password Authenticator",
