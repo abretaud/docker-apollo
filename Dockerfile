@@ -12,7 +12,7 @@ ENV WEBAPOLLO_COMMON_DATA /apollo-data-local/
 ENV CONTEXT_PATH ROOT
 
 # Temp Apollo patches when needed...
-#ADD 2209.diff /tmp/2209.diff
+ADD 2379.diff /tmp/2379.diff
 
 RUN apk update && \
 	apk add --update tar && \
