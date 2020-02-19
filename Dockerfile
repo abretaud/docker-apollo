@@ -13,6 +13,7 @@ ENV CONTEXT_PATH ROOT
 
 # Temp Apollo patches when needed...
 ADD 2379.diff /tmp/2379.diff
+ADD 90b893d8d68afcf46711a9ce0f2fd8109e178ae2.diff /tmp/90b893d8d68afcf46711a9ce0f2fd8109e178ae2.diff
 
 RUN apk update && \
 	apk add --update tar && \
