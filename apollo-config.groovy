@@ -4,7 +4,7 @@ environments {
     test {
     }
     production {
-        grails.assets.url = System.getenv("APOLLO_PATH_PREFIX") + "assets/"
+        grails.assets.url = System.getenv("APOLLO_PATH_PREFIX") + "/assets/"
         grails.serverURL = System.getenv("APOLLO_BASE_HOST") + System.getenv("APOLLO_PATH_PREFIX")
 
         dataSource {
