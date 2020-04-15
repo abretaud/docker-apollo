@@ -1,0 +1,10 @@
+--- a/grails-app/services/org/bbop/apollo/FileService.groovy	2020-04-15 11:50:16.746939073 +0200
++++ b/grails-app/services/org/bbop/apollo/FileService.groovy	2020-04-15 11:50:53.054027157 +0200
+@@ -162,6 +162,7 @@
+                         log.info("Archive includes a symlink outside the current path $entry.name -> ${dest.toString()}")
+ //                        throw new RuntimeException("Archive includes an invalid symlink: " + entry.getName() + " -> " + dest);
+                     }
++                    Files.createDirectories(path.getParent());
+                     Files.createSymbolicLink(path, Paths.get(dest));
+                     fileNames.add(destAbsPath.toString())
+                 }
