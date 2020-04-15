@@ -46,7 +46,7 @@ index 1200473a8..ca45683cd 100644
  
          while ((entry = (TarArchiveEntry) tais.getNextEntry()) != null) {
              if (atArchiveRoot) {
-@@ -141,29 +146,37 @@ class FileService {
+@@ -141,29 +147,36 @@ class FileService {
              }
  
              try {
