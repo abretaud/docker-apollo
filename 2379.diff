@@ -46,7 +46,7 @@ index 1200473a8..ca45683cd 100644
  
          while ((entry = (TarArchiveEntry) tais.getNextEntry()) != null) {
              if (atArchiveRoot) {
-@@ -141,29 +147,36 @@ class FileService {
+@@ -141,29 +147,37 @@ class FileService {
              }
  
              try {
@@ -76,6 +76,7 @@ index 1200473a8..ca45683cd 100644
 +                    if (!destAbsPath.normalize().toString().startsWith(prefix)) {
 +                        throw new RuntimeException("Archive includes an invalid symlink: " + entry.getName() + " -> " + dest);
 +                    }
++                    Files.createDirectories(path.getParent());
 +                    Files.createSymbolicLink(path, Paths.get(dest));
 +                    fileNames.add(destAbsPath.toString())
                  }
