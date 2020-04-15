@@ -102,7 +102,7 @@ index 1200473a8..ca45683cd 100644
              } catch (IOException e) {
                  log.error("Problem decrompression file ${entry.name} vs ${archiveRootDirectoryName}", e)
              }
-@@ -172,7 +185,7 @@ class FileService {
+@@ -172,7 +186,7 @@ class FileService {
          if (tempDir) {
              // move files from temp directory to folder supplied via directoryName
              String unpackedArchiveLocation = initialLocation + File.separator + archiveRootDirectoryName
@@ -111,7 +111,7 @@ index 1200473a8..ca45683cd 100644
              File finalLocationFile = new File(finalLocation)
              if (finalLocationFile.mkdir()) log.debug "${finalLocation} directory created"
              try {
-@@ -327,12 +340,14 @@ class FileService {
+@@ -327,12 +341,14 @@ class FileService {
       * @return
       * @throws IOException
       */
