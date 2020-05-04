@@ -12,6 +12,7 @@ cd /apollo/ && \
   patch -p1 < /tmp/6ef7007c3c21c397704563bc8b0529dd260360da.diff && \
 	patch -p1 < /tmp/90b893d8d68afcf46711a9ce0f2fd8109e178ae2.diff && \
   patch -p1 < /tmp/symlink_fix.diff && \
+  patch -p1 < /tmp/2476.diff && \
 
 	./apollo deploy && \
 

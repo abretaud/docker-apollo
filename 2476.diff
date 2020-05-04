@@ -1,0 +1,103 @@
+diff --git a/grails-app/controllers/org/bbop/apollo/AnnotatorController.groovy b/grails-app/controllers/org/bbop/apollo/AnnotatorController.groovy
+index b6bbcf830..83a1c4974 100644
+--- a/grails-app/controllers/org/bbop/apollo/AnnotatorController.groovy
++++ b/grails-app/controllers/org/bbop/apollo/AnnotatorController.groovy
+@@ -58,6 +58,7 @@ class AnnotatorController {
+     def loadLink() {
+         log.debug "Parameter for loadLink: ${params} vs ${request.parameterMap}"
+         String clientToken
++        String searchName = null
+         try {
+             if (params.containsKey(FeatureStringEnum.CLIENT_TOKEN.value)) {
+                 clientToken = params[FeatureStringEnum.CLIENT_TOKEN.value]
+@@ -94,26 +95,30 @@ class AnnotatorController {
+             preferenceService.setCurrentOrganism(permissionService.currentUser, organism, clientToken)
+             String location = params.loc
+             // assume that the lookup is a symbol lookup value and not a location
+-            if (location && location.contains(':') && location.contains('..')) {
+-                String[] splitString = location.split(':')
+-                log.debug "splitString : ${splitString}"
+-                String sequenceString = splitString[0]
+-                Sequence sequence = Sequence.findByOrganismAndName(organism, sequenceString)
+-                String[] minMax = splitString[1].split("\\.\\.")
+-
+-                log.debug "minMax: ${minMax}"
+-                int fmin, fmax
+-                try {
+-                    fmin = minMax[0] as Integer
+-                    fmax = minMax[1] as Integer
+-                } catch (e) {
+-                    log.error "error parsing ${e}"
+-                    fmin = sequence.start
+-                    fmax = sequence.end
++            if (location) {
++                if(location.contains(':') && location.contains('..')){
++                    String[] splitString = location.split(':')
++                    log.debug "splitString : ${splitString}"
++                    String sequenceString = splitString[0]
++                    Sequence sequence = Sequence.findByOrganismAndName(organism, sequenceString)
++                    String[] minMax = splitString[1].split("\\.\\.")
++
++                    log.debug "minMax: ${minMax}"
++                    int fmin, fmax
++                    try {
++                        fmin = minMax[0] as Integer
++                        fmax = minMax[1] as Integer
++                    } catch (e) {
++                        log.error "error parsing ${e}"
++                        fmin = sequence.start
++                        fmax = sequence.end
++                    }
++                    log.debug "fmin ${fmin} . . fmax ${fmax} . . ${sequence}"
++                    preferenceService.setCurrentSequenceLocation(sequence.name, fmin, fmax, clientToken)
++                }
++                else{
++                    searchName = location
+                 }
+-                log.debug "fmin ${fmin} . . fmax ${fmax} . . ${sequence}"
+-
+-                preferenceService.setCurrentSequenceLocation(sequence.name, fmin, fmax, clientToken)
+             }
+         }
+ 
+@@ -133,6 +138,10 @@ class AnnotatorController {
+             }
+         }
+ 
++
++        if(searchName){
++            queryParamString += "&searchLocation=${searchName}"
++        }
+         if (queryParamString.contains("http://") || queryParamString.contains("https://") ||
+                 queryParamString.contains("ftp://")) {
+             redirect uri: "${request.contextPath}/annotator/index?clientToken=" + clientToken + queryParamString
+diff --git a/grails-app/views/annotator/index.gsp b/grails-app/views/annotator/index.gsp
+index 574630372..dda3eb135 100644
+--- a/grails-app/views/annotator/index.gsp
++++ b/grails-app/views/annotator/index.gsp
+@@ -21,6 +21,7 @@
+             showFrame: '${params.showFrame  && params.showFrame == 'true' ? 'true' : 'false' }'
+             ,userId: '${userKey}'
+             ,clientToken:'${clientToken}'
++            ,searchLocation:'${searchLocation}'
+ //            ,top: "10"
+ //            ,topUnit: "PCT" // PX, EM, PC, PT, IN, CM
+ //            ,height: "80"
+diff --git a/src/gwt/org/bbop/apollo/gwt/client/MainPanel.java b/src/gwt/org/bbop/apollo/gwt/client/MainPanel.java
+index c1ac4d0f0..e5128b6c5 100644
+--- a/src/gwt/org/bbop/apollo/gwt/client/MainPanel.java
++++ b/src/gwt/org/bbop/apollo/gwt/client/MainPanel.java
+@@ -544,7 +544,12 @@ public static void updateGenomicViewerForLocation(String selectedSequence, Integ
+         String trackListString = Annotator.getRootUrl();
+         trackListString += Annotator.getClientToken() + "/";
+         trackListString += "jbrowse/index.html?loc=";
+-        trackListString += URL.encodeQueryString(selectedSequence+":") + minRegion + ".." + maxRegion;
++        if(MainPanel.currentQueryParams.containsKey("searchLocation")){
++            trackListString += MainPanel.currentQueryParams.get("searchLocation").get(0);
++        }
++        else{
++            trackListString += URL.encodeQueryString(selectedSequence+":") + minRegion + ".." + maxRegion;
++        }
+ 
+         trackListString += getCurrentQueryParamsAsString();
+ 
