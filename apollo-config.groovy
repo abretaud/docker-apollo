@@ -137,7 +137,7 @@ apollo {
 jbrowse {
     git {
         url = "https://github.com/GMOD/jbrowse"
-        branch = "1.16.8-release"
+        branch = "1.16.9-release"
     }
     plugins {
         WebApollo{
