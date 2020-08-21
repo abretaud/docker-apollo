@@ -132,6 +132,10 @@ apollo {
                     params      : ""
             ]
     ]
+
+    extraTabs = [
+        ['title': 'Sharing', 'url': 'https://apollo.genouest.org/permapol/']
+    ]
 }
 
 jbrowse {
