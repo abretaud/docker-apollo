@@ -2,7 +2,7 @@
 FROM tomcat:8.5-jre8-alpine
 
 COPY build.sh /bin/build.sh
-ENV WEBAPOLLO_VERSION b8755f6e19935d16e83d88d16ce611f373e3bc4c
+ENV WEBAPOLLO_VERSION b1ba3ce9a8966397dda49a6aa8efc7b8523e33fe
 ADD apollo-config.groovy /apollo/apollo-config.groovy
 
 # Dir where uploaded jbrowse data will be stored
@@ -12,7 +12,7 @@ ENV WEBAPOLLO_COMMON_DATA /apollo-data-local/
 ENV CONTEXT_PATH ROOT
 
 # Temp Apollo patches when needed...
-#ADD 2209.diff /tmp/2209.diff
+#ADD 2379.diff /tmp/2379.diff
 
 RUN apk update && \
 	apk add --update tar && \

@@ -4,7 +4,7 @@ environments {
     test {
     }
     production {
-        grails.assets.url = System.getenv("APOLLO_PATH_PREFIX") + "assets/"
+        grails.assets.url = System.getenv("APOLLO_PATH_PREFIX") + "/assets/"
         grails.serverURL = System.getenv("APOLLO_BASE_HOST") + System.getenv("APOLLO_PATH_PREFIX")
 
         dataSource {
@@ -67,6 +67,12 @@ environments {
                 defaultTransactionIsolation   = java.sql.Connection.TRANSACTION_READ_COMMITTED
             }
         }*/
+    }
+}
+
+if (System.getenv("WEBAPOLLO_DEBUG") == "true") {
+    log4j.main = {
+        debug "grails.app"
     }
 }
 
@@ -133,7 +139,7 @@ apollo {
 jbrowse {
     git {
         url = "https://github.com/GMOD/jbrowse"
-        branch = "1.16.6-release"
+        branch = "1.16.9-release"
     }
     plugins {
         WebApollo{
@@ -163,12 +169,12 @@ jbrowse {
             alwaysRecheck = "true"
             alwaysPull = "true"
         }
-        ComboTrackSelector{
+        /*ComboTrackSelector{
             git = 'https://github.com/Arabidopsis-Information-Portal/ComboTrackSelector'
             branch = 'master'
             alwaysRecheck = "true"
             alwaysPull = "true"
-        }
+        }*/
         MultiBigWig{
             git = 'https://github.com/elsiklab/multibigwig'
             branch = 'master'
