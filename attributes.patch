@@ -1,0 +1,13 @@
+diff --git a/grails-app/controllers/org/bbop/apollo/AnnotationEditorController.groovy b/grails-app/controllers/org/bbop/apollo/AnnotationEditorController.groovy
+index cc07a7697..e8cf8dd9a 100644
+--- a/grails-app/controllers/org/bbop/apollo/AnnotationEditorController.groovy
++++ b/grails-app/controllers/org/bbop/apollo/AnnotationEditorController.groovy
+@@ -754,7 +754,7 @@ class AnnotationEditorController extends AbstractApolloController implements Ann
+             Feature feature = Feature.findByUniqueName(uniqueName)
+             JSONArray attributes = new JSONArray()
+             feature.featureProperties.each {
+-                if (it.ontologyId != Comment.ontologyId) {
++                if (it.ontologyId != Comment.ontologyId && it.tag != null ) {
+                     JSONObject attributeObject = new JSONObject()
+                     attributeObject.put(FeatureStringEnum.TAG.value, it.tag)
+                     attributeObject.put(FeatureStringEnum.VALUE.value, it.value)
