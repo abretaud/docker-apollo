@@ -13,6 +13,7 @@ ENV CONTEXT_PATH ROOT
 
 # Temp Apollo patches when needed...
 ADD attributes.diff /tmp/attributes.diff
+ADD base_url.diff /tmp/base_url.diff
 
 RUN apk update && \
 	apk add --update tar && \
