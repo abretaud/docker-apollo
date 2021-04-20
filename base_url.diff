@@ -1,21 +1,21 @@
 diff --git a/grails-app/conf/org/bbop/apollo/SecurityFilters.groovy b/grails-app/conf/org/bbop/apollo/SecurityFilters.groovy
-index 669d962b4..7b33b7c56 100644
+index 1d578af83..7ae97c698 100644
 --- a/grails-app/conf/org/bbop/apollo/SecurityFilters.groovy
 +++ b/grails-app/conf/org/bbop/apollo/SecurityFilters.groovy
-@@ -80,7 +80,7 @@ class SecurityFilters {
- //                                }
-                                 targetUri = targetUri + paramString
-                                 if (paramString.contains("http://") || paramString.contains("https://") || paramString.contains("ftp://")) {
+@@ -92,7 +92,7 @@ class SecurityFilters {
+                               }
+                               else
+                               if (paramString.contains("http://") || paramString.contains("https://") || paramString.contains("ftp://")) {
 -                                    redirect(uri: "${request.contextPath}/auth/login?targetUri=${targetUri}")
 +                                    redirect(uri: System.getenv("APOLLO_BASE_HOST") + System.getenv("APOLLO_PATH_PREFIX") + "/auth/login?targetUri=${targetUri}")
                                  }
                                  else {
                                      redirect(uri: "/auth/login?targetUri=${targetUri}")
 diff --git a/grails-app/controllers/org/bbop/apollo/AnnotatorController.groovy b/grails-app/controllers/org/bbop/apollo/AnnotatorController.groovy
-index 2f822916d..dda3e1541 100644
+index 6c3761c4c..9267be605 100644
 --- a/grails-app/controllers/org/bbop/apollo/AnnotatorController.groovy
 +++ b/grails-app/controllers/org/bbop/apollo/AnnotatorController.groovy
-@@ -164,7 +164,7 @@ class AnnotatorController {
+@@ -161,7 +161,7 @@ class AnnotatorController {
          }
          if (queryParamString.contains("http://") || queryParamString.contains("https://") ||
                  queryParamString.contains("ftp://")) {

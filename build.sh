@@ -8,7 +8,6 @@ source $HOME/.sdkman/bin/sdkman-init.sh
 cd /apollo/ && \
 
 	# Temp Apollo patches when needed...
-	patch -p1 < /tmp/attributes.diff && \
 	patch -p1 < /tmp/base_url.diff && \
 
 	./apollo deploy && \
