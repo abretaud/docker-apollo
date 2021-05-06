@@ -2,7 +2,7 @@
 FROM tomcat:8.5-jre8-alpine
 
 COPY build.sh /bin/build.sh
-ENV WEBAPOLLO_VERSION dc39f89a40a879cace03de9a3f21a529ba8e3268
+ENV WEBAPOLLO_VERSION a71e2c2f50676134a2c9828eb9755688f38c1b74
 ADD apollo-config.groovy /apollo/apollo-config.groovy
 
 # Dir where uploaded jbrowse data will be stored
