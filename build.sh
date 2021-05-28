@@ -9,6 +9,7 @@ cd /apollo/ && \
 
 	# Temp Apollo patches when needed...
 	patch -p1 < /tmp/base_url.diff && \
+	patch -p1 < /tmp/blastview.diff && \
 
 	./apollo deploy && \
 

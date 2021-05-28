@@ -1,0 +1,16 @@
+diff --git a/client/apollo/js/TrackConfigTransformer.js b/client/apollo/js/TrackConfigTransformer.js
+index 2cead5462..8c471fdb9 100644
+--- a/client/apollo/js/TrackConfigTransformer.js
++++ b/client/apollo/js/TrackConfigTransformer.js
+@@ -32,6 +32,11 @@ constructor: function( args )  {
+         trackConfig.type = "WebApollo/View/Track/WebApolloNeatCanvasFeatures";
+     };
+ 
++    this.transformers["BlastView/View/Track/CanvasFeatures"] = function(trackConfig) {
++        // trackConfig.type = "WebApollo/View/Track/WebApolloCanvasFeatures";
++        trackConfig.type = "WebApollo/View/Track/WebApolloNeatCanvasFeatures";
++    };
++
+     this.transformers["JBrowse/View/Track/HTMLVariants"] = function(trackConfig) {
+         trackConfig.type = "WebApollo/View/Track/DraggableHTMLVariants";
+     };
